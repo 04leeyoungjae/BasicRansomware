@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <style>
+        #chatbox {
+            width: 1000px;
+            height: 600px;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        #message {
+            width: 1000px;
+	    height: 50px;
+            padding: 5px;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div id="chatbox"></div>
+    <input type="text" id="message" placeholder="Type your message..." onkeydown="if(event.keyCode==13) sendMessage()">
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        // Check if user has an ID stored in cookie
+        var userId = getCookie("id");
+        if (!userId || userId==="KEEPER" || !(isValidHex(userId))) {
+            var userName = prompt("Enter your id in Ransomnote:");
+            if (isValidHex(userName)) {
+                document.cookie = "id=" + userName;
+                userId = userName;
+            } else {
+                alert("Sorry, you can't use that name");
+           	location.reload();
+	    }
+        }
+
+        // Function to send message
+        function sendMessage() {
+            var message = $("#message").val();
+            $.post("chat.php", { id: userId, message: message }, function(data) {
+                $("#message").val("");
+            });
+        }
+
+        // Function to refresh chatbox every 5 seconds
+        setInterval(function() {
+		var chatbox=document.getElementById("chatbox");
+		var isScrolledToBottom=chatbox.scrollHeight-chatbox.clientHeight<=chatbox.scrollTop+1;
+
+		$("#chatbox").load("refresh.php", function()
+		{
+			if (isScrolledToBottom)
+			{
+				chatbox.scrollTop=chatbox.scrollHeight;
+			}
+		});
+        }, 1000);
+
+        // Function to get cookie value by name
+        function getCookie(name) {
+            var cookieArr = document.cookie.split("; ");
+            for (var i = 0; i < cookieArr.length; i++) {
+                var cookiePair = cookieArr[i].split("=");
+                if (cookiePair[0] === name) {
+                    return decodeURIComponent(cookiePair[1]);
+                }
+            }
+            return null;
+        }
+	function isValidHex(input){
+		var hexRegex=/^[0-9a-fA-F]{8}$/;
+		return hexRegex.test(input);
+	}
+    </script>
+</body>
+</html>
+
